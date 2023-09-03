@@ -93,8 +93,12 @@ public class Model {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
-
-
+        int n = b.size();
+        for (int r = 0; r < n; r++){
+            for(int c = 0; c < n; c++) {
+                if (b.tile(r,c) == null) {return true;}
+                }
+            }
         return false;
     }
 
