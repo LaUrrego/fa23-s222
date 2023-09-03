@@ -109,8 +109,13 @@ public class Model {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int n = b.size();
 
-
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if (b.tile(i,j) != null && b.tile(i,j).value() == MAX_PIECE){return true;}
+            }
+        }
         return false;
     }
 
@@ -122,6 +127,31 @@ public class Model {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        int n = b.size();
+
+        for (int r = 0; r < n; r ++){
+            for(int c = 0; c < n; c++) {
+                // check for empty space
+                if(b.tile(r,c) == null){return true;}
+
+                // every non-null tile needs its neighbors checked for the same value
+                int currValue = b.tile(r,c).value();
+
+                int[][] neighbors = {{0,1},{0,-1},{1,0},{-1,0}};
+
+                for(int[] neighbor:neighbors ){
+                    int newRow = r + neighbor[0];
+                    int newCol = c + neighbor[1];
+
+                    if(0 <= newRow && newRow < n && 0 <= newCol && newCol < n){
+                        if (b.tile(newRow, newCol).value() == currValue){return true;}
+                    }
+
+                }
+
+            }
+
+        }
 
 
         return false;
