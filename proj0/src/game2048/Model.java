@@ -174,55 +174,23 @@ public class Model {
         // for the tilt to the Side SIDE.
         // assume side is NORTH
         int n = this.board.size();
+        boolean[] mergedThisTurn = new boolean[n];
 
         for(int c = 0; c < n; c++){
+
             int current = n-1;
 
             for(int next = n - 1; next >= 0; next--){
-                // check for tile at next
-                if(tile(c,next) != null) {
-                    // we have a valid tile
-                    Tile t = tile(c, next);
-                    // we have an empty space at current, so move there
-                    // current remains the same
+                // found an empty space
 
-                    Tile currentTile = tile(c, current);
 
-                    if (currentTile == null) {
-                        // move to current, the empty space
-                        this.board.move(c, current, t);
-
-                    } else {
-                        // we have an element at current
-                        int currentValue = currentTile.value();
-                        // merge
-                        if (t.value() == currentValue) {
-                            this.board.move(c, current, t);
-                            this.score += t.value() * 2;
-                            // move down current since a merge happened
-                            current--;
-
-                        } else {
-                            // no merge, so move down
-                            while(current-1 >=0 && tile(c,current -1) != null){
-                                current--;
-                            }
-                            if(current-1 >=0){
-                                this.board.move(c, current-1,t);
-                                current--;
-
-                            }
-
-                        }
-                    }
-
-                }
             }
         }
 
-
         checkGameOver();
     }
+
+
 
 
     @Override
