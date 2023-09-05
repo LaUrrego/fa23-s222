@@ -94,9 +94,9 @@ public class Model {
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
         int n = b.size();
-        for (int r = 0; r < n; r++){
-            for(int c = 0; c < n; c++) {
-                if (b.tile(r,c) == null) {return true;}
+        for (int c = 0; c < n; c++){
+            for(int r = 0; r < n; r++) {
+                if (b.tile(c,r) == null) {return true;}
                 }
             }
         return false;
@@ -111,9 +111,9 @@ public class Model {
         // TODO: Fill in this function.
         int n = b.size();
 
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++){
-                if (b.tile(i,j) != null && b.tile(i,j).value() == MAX_PIECE){return true;}
+        for(int c = 0; c < n; c++){
+            for(int r = 0; r < n; r++){
+                if (b.tile(c,r) != null && b.tile(c,r).value() == MAX_PIECE){return true;}
             }
         }
         return false;
@@ -129,13 +129,13 @@ public class Model {
         // TODO: Fill in this function.
         int n = b.size();
 
-        for (int r = 0; r < n; r ++){
-            for(int c = 0; c < n; c++) {
+        for (int c = 0; c < n; c++){
+            for(int r = 0; r < n; r++) {
                 // check for empty space
-                if(b.tile(r,c) == null){return true;}
+                if(b.tile(c,r) == null){return true;}
 
                 // every non-null tile needs its neighbors checked for the same value
-                int currValue = b.tile(r,c).value();
+                int currValue = b.tile(c,r).value();
 
                 int[][] neighbors = {{0,1},{0,-1},{1,0},{-1,0}};
 
@@ -172,6 +172,53 @@ public class Model {
     public void tilt(Side side) {
         // TODO: Modify this.board (and if applicable, this.score) to account
         // for the tilt to the Side SIDE.
+        // assume side is NORTH
+        int n = this.board.size();
+
+        for(int c = 0; c < n; c++){
+            int current = n-1;
+
+            for(int next = n - 1; next >= 0; next--){
+                // check for tile at next
+                if(tile(c,next) != null) {
+                    // we have a valid tile
+                    Tile t = tile(c, next);
+                    // we have an empty space at current, so move there
+                    // current remains the same
+
+                    Tile currentTile = tile(c, current);
+
+                    if (currentTile == null) {
+                        // move to current, the empty space
+                        this.board.move(c, current, t);
+
+                    } else {
+                        // we have an element at current
+                        int currentValue = currentTile.value();
+                        // merge
+                        if (t.value() == currentValue) {
+                            this.board.move(c, current, t);
+                            this.score += t.value() * 2;
+                            // move down current since a merge happened
+                            current--;
+
+                        } else {
+                            // no merge, so move down
+                            while(current-1 >=0 && tile(c,current -1) != null){
+                                current--;
+                            }
+                            if(current-1 >=0){
+                                this.board.move(c, current-1,t);
+                                current--;
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
 
 
         checkGameOver();
