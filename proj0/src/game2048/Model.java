@@ -174,16 +174,38 @@ public class Model {
         // for the tilt to the Side SIDE.
         // assume side is NORTH
         int n = this.board.size();
-        boolean[] mergedThisTurn = new boolean[n];
 
         for(int c = 0; c < n; c++){
+            int lastEmptySpace = n-1;
 
-            int current = n-1;
+            boolean[] mergedThisTurn = new boolean[n];
 
-            for(int next = n - 1; next >= 0; next--){
-                // found an empty space
+            for(int r = n - 1; r >= 0; r--){
+                Tile currentTile = tile(c,r);
 
+                if(currentTile == null || mergedThisTurn[r]){continue;}
 
+                // move up and place either in an empty space or merge
+                int up;
+                for(up = r+1; up < n; up++){
+                    //found a tile
+                    if(tile(c,up) != null){
+                        if(tile(c,up).value() == currentTile.value() && !mergedThisTurn[up]){
+                            // move up and merge
+                            this.board.move(c,up,currentTile);
+                            System.out.println("Merged");
+                            mergedThisTurn[up] = true;
+                            this.score += currentTile.value() * 2;
+                            break;
+                        } else {
+                            lastEmptySpace = up - 1;
+                        }
+                    }
+
+                }
+                if(up > lastEmptySpace || tile(c,lastEmptySpace) == null){
+                    this.board.move(c,lastEmptySpace, currentTile);
+                }
             }
         }
 
