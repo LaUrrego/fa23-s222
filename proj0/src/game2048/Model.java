@@ -113,7 +113,7 @@ public class Model {
 
         for(int c = 0; c < n; c++){
             for(int r = 0; r < n; r++){
-                if (b.tile(c,r) != null && b.tile(c,r).value() == MAX_PIECE){return true;}
+                if (b.tile(c,r) != null && b.tile(c,r).value() == Model.MAX_PIECE){return true;}
             }
         }
         return false;
@@ -144,7 +144,7 @@ public class Model {
                     int newCol = c + neighbor[1];
 
                     if(0 <= newRow && newRow < n && 0 <= newCol && newCol < n){
-                        if (b.tile(newRow, newCol).value() == currValue){return true;}
+                        if (b.tile(newRow, newCol) != null && b.tile(newRow, newCol).value() == currValue){return true;}
                     }
 
                 }
@@ -173,7 +173,10 @@ public class Model {
         // TODO: Modify this.board (and if applicable, this.score) to account
         // for the tilt to the Side SIDE.
         // assume side is NORTH
+
         int n = this.board.size();
+
+        this.board.setViewingPerspective(side);
 
         for(int c = 0; c < n; c++){
             int lastEmptySpace = n-1;
@@ -196,6 +199,7 @@ public class Model {
                             System.out.println("Merged");
                             mergedThisTurn[up] = true;
                             this.score += currentTile.value() * 2;
+                            lastEmptySpace = up - 1;
                             break;
                         } else {
                             lastEmptySpace = up - 1;
@@ -203,12 +207,13 @@ public class Model {
                     }
 
                 }
-                if(up > lastEmptySpace || tile(c,lastEmptySpace) == null){
+                if(up == n){
                     this.board.move(c,lastEmptySpace, currentTile);
+                    lastEmptySpace--;
                 }
             }
         }
-
+        this.board.setViewingPerspective(Side.NORTH);
         checkGameOver();
     }
 
