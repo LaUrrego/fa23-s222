@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList; // import the ArrayList class
 
 public class LinkedListDeque<T> implements Deque<T> {
 
@@ -8,47 +9,66 @@ public class LinkedListDeque<T> implements Deque<T> {
         public Node prev;
 
         private Node(T i, Node n, Node p){
-            item = i;
-            next = n;
-            prev = p;
+            // i = item, n = next Node, p = previous Node
+            this.item = i;
+            this.next = n;
+            this.prev = p;
 
         }
 
     }
 
     private int size;
-    private Node sentinel;
+    public Node sentinel;
 
     public LinkedListDeque(){
-        size = 0;
-        sentinel = new Node(null, null, null);
-        sentinel.next = sentinel;
-        sentinel.prev = sentinel;
+        this.size = 0;
+        this.sentinel = new Node(null, null, null);
+        this.sentinel.next = sentinel;
+        this.sentinel.prev = sentinel;
 
     }
     @Override
     public void addFirst(T x) {
+        Node newNode = new Node(x, null, null);
+        this.sentinel.next.prev = newNode;
+        this.sentinel.next = newNode;
+        newNode.prev = this.sentinel;
+        this.size ++;
 
     }
 
     @Override
     public void addLast(T x) {
+        Node newNode = new Node(x, null, null);
+        newNode.prev = this.sentinel.prev;
+        newNode.prev.next = newNode;
+        newNode.next = this.sentinel;
+        this.sentinel.prev = newNode;
+        this.size ++;
+
 
     }
 
     @Override
     public List<T> toList() {
-        return null;
+        List<T> returnList = new ArrayList<>();
+        Node node = this.sentinel.next;
+        for(int i = this.size; i > 0; i--){
+            returnList.add(node.item);
+            node = node.next;
+        }
+        return returnList;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.size == 0;
     }
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
@@ -63,7 +83,15 @@ public class LinkedListDeque<T> implements Deque<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if(index >= this.size || index < 0){
+            return null;
+        }
+        Node node = this.sentinel.next;
+
+        for(int i = 0; i < index; i++ ){
+            node = node.next;
+        }
+        return node.item;
     }
 
     @Override

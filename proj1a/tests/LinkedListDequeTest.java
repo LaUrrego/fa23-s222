@@ -71,4 +71,39 @@ public class LinkedListDequeTest {
      }
 
     // Below, you'll write your own tests for LinkedListDeque.
+    @Test
+    public void testIsNotEmpty(){
+         Deque<Integer> lld1 = new LinkedListDeque<>();
+         lld1.addFirst(1); // [1]
+            lld1.addFirst(2); //[2,1]
+
+        assertThat(lld1.size()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void testIsEmpty(){
+         Deque<Integer> lld = new LinkedListDeque<>();
+
+         assertThat(lld.size()).isEqualTo(0);
+         assertThat(lld.isEmpty()).isTrue();
+    }
+
+    @Test
+    public void testGet(){
+         Deque<Integer> lld = new LinkedListDeque<>();
+         lld.addFirst(1); // [1]
+        lld.addFirst(2); // [2,1]
+        lld.addFirst(3); // [3, 2, 1]
+        lld.addLast(1); // [1]
+        lld.addLast(2); // [1,2]
+        lld.addLast(3); // [1,2,3]
+
+        //lld.addLast(3); // [2, 1, 3]
+        assertThat(lld.toList()).containsExactly(2,1,3).inOrder();
+        assertThat(lld.get(0)).isEqualTo(2);
+        assertThat(lld.get(1)).isEqualTo(1);
+        assertThat(lld.get(2)).isEqualTo(3);
+    }
+
 }
